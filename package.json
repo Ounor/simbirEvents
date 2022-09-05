@@ -6,6 +6,9 @@
   "author": "a_pereladov <aleksandr.pereladov@simbirsoft.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "pg": "^8.8.0",
+    "pg-promise": "^10.12.0",
+    "sequelize": "^6.21.4"
   }
 }
