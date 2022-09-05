@@ -1,0 +1,11 @@
+{
+  "name": "simbirEventsBack",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git@github.com:Ounor/simbirEvents.git",
+  "author": "a_pereladov <aleksandr.pereladov@simbirsoft.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
