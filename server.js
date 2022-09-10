@@ -49,7 +49,7 @@ const upload = multer(
 );
  
 
-app.get('/', () => res.json({ message: "Successfully" }))
+app.get('/', (res) => res.json({ message: "Successfully" }))
 app.get('/getCity/', db.getCity)
 //
 app.get('/getEvents/', db.getEvents) 
