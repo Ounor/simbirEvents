@@ -1,32 +1,47 @@
 const express = require('express');
 const app = express();
- const Sequelize = require('sequelize');
+const port = 3000
+const db = require('./queries')
+const bodyParser = require("body-parser");
+// import swaggerAutogen from 'swagger-autogen'
+// const endpointsFiles = [join(_dirname, './queries.js')]
 
-const { Pool } = require('pg')
-const connectionString = 'postgres://ulgpbzcaxnbkft:be2cfa564ede47fff1b20578c0df3b8426edec6086da33da15db2b7f7b898f0d@ec2-54-246-185-161.eu-west-1.compute.amazonaws.com:5432/d1ebnbl3rm8869'
-const sequelize = new Sequelize(connectionString);
+app.use(bodyParser.json())
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+)
 
-const pool = new Pool({
-  sequelize,
-})
-
-
-
-pool.query('SELECT NOW()', (err, res) => {
-  // console.log(err, res)
-  pool.end()
-})
-
-app.get('/', (req, res) => {
-  res
-    .status(200)
-    .send('Hello server is running')
-    .end();
-});
+//  app.use(express.methodOverride());
+app.use(bodyParser.multipart({
+    uploadDir: './uploads',
+    keepExtensions: true
+}));
  
-// Start the server
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
+app.get('/getCity/', db.getCity)
+//
+app.get('/getEvents/', db.getEvents) 
+//
+app.post('/addUserToEvent/', db.addUserToEvent) 
+app.delete('/deleteUserFromEvent/', db.deleteUserFromEvent) 
+//
+app.post('/createFeedback/', db.createFeedback) 
+//
+app.get('/getAllParticipants/', db.getAllParticipants) 
+//
+app.get('/getDirection/', db.getDirection) 
+//
+app.get('/getEventsbyId/', db.getEventsbyId) 
+//
+app.post('/upload', function(req, res){
+    // Returns json of uploaded file
+    res.json(req.files);
 });
+
+
+app.listen(port, () => {
+    console.log(`App running on port ${port}.`)
+})
+
+ 
