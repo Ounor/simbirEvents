@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000
+const PORT = process.env.PORT || 5000
 const fs = require('fs');
 const db = require('./queries')
 const multer = require('multer')
@@ -73,7 +73,7 @@ app.post("/uploadFiles", upload.array("files"), () =>  res.json({ message: "Succ
 app.post('/createEvent/',  upload.single('thumbnail'), db.createEvent
 ) 
 
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`App running.`)
 })
 
