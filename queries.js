@@ -33,8 +33,8 @@ const deleteUserFromEvent = (request, response) => {
 }
 
 const createFeedback = (request, response) => {
-    const {userId, eventId, feedbackText} = request.body
-    pool.query('SELECT simbirsoft.createfeedback($1, $2, $3)', [userId, eventId, feedbackText] ,(error, results) => {
+    const {userId, eventId, feedbackText, rating, isAnonim = false} = request.body
+    pool.query('SELECT simbirsoft.createfeedback($1, $2, $3)', [userId, eventId, feedbackText, rating, isAnonim] ,(error, results) => {
         if (error) {
             response.status(500).json(error.message)
             return
@@ -55,9 +55,11 @@ const getAllParticipants = (request, response) => {
 }
 
 const getEvents = (request, response) => {
-  const {date, cityId, directionId, participation} = request.query
-  
-  pool.query('SELECT simbirsoft.geteventsbyfilters($1::timestamp without time zone, $2, $3, 4)', [date, cityId, directionId, participation],  (error, results) => {
+  const {userId, date, cityId, directionId, participation} = request.query
+
+  // puserid integer, pdateevent timestamp without time zone, pcityid integer, pdirectionid integer DEFAULT NULL::integer, pparticipation boolean DEFAULT false, pcount boolean DEFAULT false
+
+  pool.query('SELECT simbirsoft.geteventsbyfilters($1, $2::timestamp without time zone, $3, $4, $5)', [userId , date, cityId, directionId, participation],  (error, results) => {
           if (error) { 
               response.status(500).json(error.message)
               return
@@ -102,9 +104,21 @@ const getEventsbyId = (request, response) => {
 }
 
 const createEvent = (request, response) => {
-  const {name, date, cityId, place, description, maxCount, direction, eventHolderId} = request.body
+  const {name, date, time, cityId, place, description, maxCount, direction, eventHolderId} = request.body
     const thumbnail = request.file.filename || ''
-    pool.query('SELECT simbirsoft.createevent($1, $2::timestamp without time zone, $3, $4, $5, $6, $7, $8, $9)',[name, date, cityId, place, description, maxCount, direction, thumbnail, eventHolderId], (error, results) => {
+
+//      * pnameevent - наименование мероприятия
+//  * pdateevent - дата проведения мероприятия 
+//  * ptimeevent - время проведения мероприятия 
+//  * pcityid - идентификатор города,
+//  * pplace - место проведения мероприятия,
+//  * pdescription - описание мероприятия,
+//  * pcountpeople - ограничение по количеству людей на мероприятии,
+//  * pdirectionid - идентификатор отдела, 
+//  * pimage - путь до изображения,
+//  * porganizerid - идентификатор организатора(создателя) мероприятия
+//  * 
+    pool.query('SELECT simbirsoft.createevent($1, $2::timestamp without time zone, $3, $4, $5, $6, $7, $8, $9, $10 )',[name, date, time, cityId, place, description, maxCount, direction, thumbnail, eventHolderId], (error, results) => {
           if (error) {
               response.status(500).json(error.message)
               return

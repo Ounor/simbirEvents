@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 5000
-const fs = require('fs');
+const PORT = process.env.PORT || 8080
+let fs = require('fs-extra');
 const db = require('./queries')
 const multer = require('multer')
 const bodyParser = require("body-parser");
@@ -15,24 +15,17 @@ app.use(
     })
 )
 
-
+ 
 const storage  = multer.diskStorage({
     destination: function (req, file, cb) {
         let newDestination = ''
         if (req.body.eventId) {
-            newDestination = `uploads/${req.body.eventId}`;
+            newDestination = `./uploads/${req.body.eventId}`;
         } else {
-            newDestination = `uploads/`;
+            newDestination = `./uploads/`;
         }
-        const stat = null;
-        try {
-            stat = fs.statSync(newDestination);
-        } catch (err) {
-            fs.mkdirSync(newDestination);
-        }
-        if (stat && !stat.isDirectory()) {
-            throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
-        }       
+
+        fs.mkdirsSync(newDestination);
         cb(null, newDestination);
     }
 });
