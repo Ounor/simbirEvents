@@ -15,6 +15,12 @@ app.use(
     })
 )
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
  
 const storage  = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -27,7 +33,10 @@ const storage  = multer.diskStorage({
 
         fs.mkdirsSync(newDestination);
         cb(null, newDestination);
-    }
+    },
+     filename: function (req, file, cb) {
+        cb(null, Date.now() + '.jpg') //Appending .jpg
+    } 
 });
 
 const upload = multer(
@@ -50,6 +59,8 @@ app.get('/getCity/', db.getCity)
 //
 app.get('/getEvents/', db.getEvents) 
 //
+app.get('/getEventsbyId/', db.getEventsbyId) 
+//
 app.post('/addUserToEvent/', db.addUserToEvent) 
 app.delete('/deleteUserFromEvent/', db.deleteUserFromEvent) 
 //
@@ -58,8 +69,6 @@ app.post('/createFeedback/', db.createFeedback)
 app.get('/getAllParticipants/', db.getAllParticipants) 
 //
 app.get('/getDirection/', db.getDirection) 
-//
-app.get('/getEventsbyId/', db.getEventsbyId) 
 //
 app.post("/uploadFiles", upload.array("files"), () =>  res.json({ message: "Successfully uploaded files" }));
  
